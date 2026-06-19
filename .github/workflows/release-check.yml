@@ -22,5 +22,8 @@ jobs:
       - name: Compile Python scripts
         run: python3 -m py_compile scripts/*.py
 
+      - name: Install test dependencies
+        run: python3 -m pip install pytest
+
       - name: Unit tests
         run: python3 -m pytest tests/test_public_standards_release.py -q
