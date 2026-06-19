@@ -39,6 +39,8 @@ FORBIDDEN_PATH_PARTS = {
     ".env", "data", "logs", ".venv", "venv", ".pages_repo",
 }
 
+SKIP_PATH_PARTS = {".git", "__pycache__", ".pytest_cache", ".ruff_cache"}
+
 SECRET_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("aws_key", re.compile(r"AKIA[0-9A-Z]{16}")),
     ("github_token", re.compile(r"ghp_[A-Za-z0-9]{20,}")),
@@ -67,6 +69,8 @@ def check_forbidden_paths(repo_root: Path) -> list[str]:
     for path in repo_root.rglob("*"):
         if not path.is_file():
             continue
+        if set(path.parts) & SKIP_PATH_PARTS:
+            continue
         parts = set(path.parts)
         hit = parts & FORBIDDEN_PATH_PARTS
         if hit:
@@ -81,6 +85,8 @@ def check_secret_patterns(repo_root: Path) -> list[str]:
     skip_suffixes = {".png", ".jpg", ".gif", ".pyc", ".woff", ".ico"}
     for path in repo_root.rglob("*"):
         if not path.is_file() or path.suffix.lower() in skip_suffixes:
+            continue
+        if set(path.parts) & SKIP_PATH_PARTS:
             continue
         rel = path.relative_to(repo_root).as_posix()
         try:
