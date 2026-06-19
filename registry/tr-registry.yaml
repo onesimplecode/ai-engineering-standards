@@ -1,0 +1,205 @@
+# LumiaForge Public Technical Requirement Registry (curated v0.1)
+# Curated public registry subset. IDs are permanent — never renumbered.
+#
+# System slugs: SEC, TEST, ADR, AGT, GOV, PUB (public release)
+
+requirements:
+
+  - id: TR-SEC-001
+    title: No hardcoded secrets
+    status: active
+    section: "Secrets Management"
+    text: >
+      All secrets must be stored in a vault. Never hardcoded in configuration files,
+      source code, comments, or test fixtures.
+
+  - id: TR-SEC-002
+    title: PII encrypted at rest
+    status: active
+    section: "Data Privacy"
+    text: >
+      Personally identifiable information must be encrypted at rest when stored
+      by an application.
+
+  - id: TR-SEC-003
+    title: PII routed to local LLM only
+    status: active
+    section: "Agents"
+    text: >
+      For privacy-focused use cases, local LLMs must be used. Cloud-backed agents must not
+      access private notes, secrets, private repos, or unrestricted home directories.
+
+  - id: TR-SEC-005
+    title: Externally retrieved content treated as untrusted
+    status: active
+    section: "Prompt Injection"
+    text: >
+      Retrieved content must not authorize tool calls or override system-level reasoning.
+      When retrieved content may contain PII, TR-SEC-003 routing takes precedence.
+
+  - id: TR-TEST-001
+    title: TDD required for core logic
+    status: active
+    section: "Testing"
+    text: >
+      Tests are written before or alongside core logic. Scaffolding may come
+      first, but business logic should not be considered complete without tests.
+
+  - id: TR-TEST-002
+    title: Coverage targets by deployment tier
+    status: active
+    section: "Testing"
+    text: >
+      POC projects may use targeted coverage. Local Production targets at least
+      70 percent coverage. Cloud Production targets at least 90 percent coverage.
+
+  - id: TR-TEST-004
+    title: LLM regression benchmark on model switch
+    status: active
+    section: "Testing"
+    text: >
+      When switching or upgrading a runtime LLM, run a standard task set against
+      the old and new models and record cost, latency, correctness, and schema
+      validation deltas. See templates/llm-regression-benchmark.md.
+
+  - id: TR-ADR-001
+    title: ADR required for significant design decisions
+    status: active
+    section: "Architecture Decision Records"
+    text: >
+      An ADR must be created for each significant design decision including agent
+      framework choice and trigger classification (TR-AGT-004).
+
+  - id: TR-AGT-003
+    title: Agentic node loop contracts
+    status: active
+    section: "Agent Spawning"
+    text: >
+      Every agent pipeline node declares input schema, output schema, exit condition,
+      and resource budget before implementation.
+
+  - id: TR-AGT-002
+    title: Deterministic operations use scripts not agents
+    status: active
+    section: "Agent Spawning"
+    text: >
+      Operations that require repeatable results should be implemented in scripts,
+      code, queries, tests, or validators. Agents may call those deterministic
+      tools, but should not replace them.
+
+  - id: TR-AGT-004
+    title: Agent trigger type classified at design time
+    status: active
+    section: "Agent Spawning"
+    text: >
+      Each agent invocation is classified as event-driven, scheduled, or user-initiated.
+      Undocumented triggers are non-compliant unmanaged side effects.
+
+  - id: TR-TEST-005
+    title: LLM eval files co-located with agent modules
+    status: active
+    section: "Testing"
+    text: >
+      Each agent module that makes LLM calls should have a co-located
+      tests/evals/test_<agent>_eval.py file with golden cases, a score function,
+      and an LLM_EVAL=true guard so evals do not run in the standard unit suite.
+      See templates/llm-eval.md.
+
+  - id: TR-TEST-006
+    title: Post-write state change verification for agent actions
+    status: active
+    section: "Testing"
+    text: >
+      Agent actions that produce external side effects, such as writing files,
+      updating records, sending messages, or calling tools, should be followed by
+      a deterministic verification step that confirms the observable state
+      changed as expected.
+
+  - id: TR-GOV-001
+    title: Config/model-string consistency check
+    status: active
+    section: "Development Conventions"
+    text: >
+      scripts/check-config-consistency.py detects retired model strings and drift
+      within an app. Run before merge; CI integration recommended.
+
+  - id: TR-GOV-002
+    title: Deferred-work tagging convention
+    status: active
+    section: "Development Conventions"
+    text: >
+      Tag deferred work as LUMIA-DEBT or POC-EXCEPTION. scripts/debt-report.py
+      compiles tags for maturity checklist reconciliation.
+
+  - id: TR-GOV-003
+    title: Process intensity mode declared per work session
+    status: active
+    section: "Development Conventions"
+    text: >
+      Work sessions may declare a process intensity mode, such as full or
+      poc-fast. Security and agent safety requirements still apply regardless of
+      mode; deferred gates must be recorded as structured debt or POC exceptions.
+
+  - id: TR-GOV-004
+    title: Per-app maturity checklist
+    status: active
+    section: "App Starter Template"
+    text: >
+      Each app maintains docs/maturity-checklist.md mapping governance mechanisms
+      to ISO 42001-inspired control objectives.
+
+  - id: TR-GOV-005
+    title: AI system impact assessment
+    status: active
+    section: "Architecture Decision Records"
+    text: >
+      ADRs that change AI behavior toward people require templates/ai-impact-assessment.md.
+
+  - id: TR-GOV-006
+    title: Recurring governance review cadence
+    status: active
+    section: "Documentation"
+    text: >
+      Governance reviewed at tier graduations and at minimum every 90 days using
+      templates/governance-review.md.
+
+  - id: TR-PUB-001
+    title: Curated public release scope
+    status: active
+    section: "Public Release"
+    text: >
+      Public releases include only approved standards artifacts, examples,
+      templates, scripts, and repository metadata. Unrelated application source
+      code and local runtime artifacts are out of scope.
+
+  - id: TR-PUB-002
+    title: Public release secret and artifact denylist
+    status: active
+    section: "Public Release"
+    text: >
+      Before publish, scripts/public-export-check.py validates required public docs,
+      generic forbidden artifact paths, secret-like patterns, and Python script syntax.
+
+  - id: TR-PUB-003
+    title: License and attribution review
+    status: active
+    section: "Public Release"
+    text: >
+      Each release requires LICENSE and ATTRIBUTIONS.md. Maintainers should
+      complete a license and attribution review before publishing.
+
+  - id: TR-PUB-004
+    title: Public support scope and issue triage
+    status: active
+    section: "Public Release"
+    text: >
+      CONTRIBUTING.md, SECURITY.md, issue templates, and label policy define support
+      boundaries and triage for low-effort AI-generated reports.
+
+  - id: TR-PUB-005
+    title: Roadmap and changelog cadence
+    status: active
+    section: "Public Release"
+    text: >
+      Public repo maintains ROADMAP.md and CHANGELOG.md with periodic curated releases,
+      not continuous private-repo mirroring.

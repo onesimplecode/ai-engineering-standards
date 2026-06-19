@@ -1,0 +1,10 @@
+# Snippet from public registry — TR-AGT-004 only
+
+requirements:
+  - id: TR-AGT-004
+    title: Agent trigger type classified at design time
+    status: active
+    section: "Agent Spawning"
+    text: >
+      Each agent invocation must be classified at design time as event-driven,
+      scheduled, or user-initiated. Undocumented triggers are unmanaged side effects.

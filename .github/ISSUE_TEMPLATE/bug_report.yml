@@ -1,0 +1,56 @@
+name: Bug report
+description: Reproducible defect in templates, scripts, or documentation
+title: "[bug]: "
+labels: ["bug", "needs-evidence"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide enough detail to reproduce. Reports without version and steps may be closed as `needs-evidence`.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: "v0.1.0 or abc1234"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run `python3 scripts/check-config-consistency.py --app ...`
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence (command output, file paths)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: not-ai-spam
+    attributes:
+      label: Confirmation
+      options:
+        - label: I read CONTRIBUTING.md and this report describes a specific issue in this repo (not a generic AI-generated checklist).
+          required: true

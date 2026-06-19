@@ -1,0 +1,45 @@
+name: Process / standards feedback
+description: Propose or discuss engineering standards, TR-IDs, or governance patterns
+title: "[proposal]: "
+labels: ["proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for standards discussion — not application bugs.
+
+  - type: textarea
+    id: failure-mode
+    attributes:
+      label: What failure mode should this prevent?
+      description: e.g. undocumented agent trigger, PII sent to cloud LLM, config/doc drift
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - TR registry
+        - Templates
+        - Scripts / enforcement
+        - Documentation
+        - Worked example
+        - Other
+    validations:
+      required: true

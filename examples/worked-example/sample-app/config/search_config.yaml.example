@@ -1,0 +1,6 @@
+# Example config — not authoritative for docs
+# See CLAUDE.md for documented default (intentional drift example for TR-GOV-001)
+
+llm:
+  local_model: "gemma4:26b"
+  provider: ollama
