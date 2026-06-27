@@ -1,4 +1,4 @@
-# LumiaForge Public Technical Requirement Registry (curated v0.1)
+# LumiaForge Public Technical Requirement Registry (curated v0.2)
 # Curated public registry subset. IDs are permanent — never renumbered.
 #
 # System slugs: SEC, TEST, ADR, AGT, GOV, PUB (public release)
@@ -178,7 +178,9 @@ requirements:
     section: "Public Release"
     text: >
       Before publish, scripts/public-export-check.py validates required public docs,
-      generic forbidden artifact paths, secret-like patterns, and Python script syntax.
+      forbidden artifact paths, secret-like patterns, and Python script syntax.
+      The release-check CI workflow additionally runs detect-secrets on the staging
+      tree (templates/ and examples/ excluded to avoid placeholder false positives).
 
   - id: TR-PUB-003
     title: License and attribution review

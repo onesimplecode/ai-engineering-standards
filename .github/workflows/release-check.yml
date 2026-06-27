@@ -23,7 +23,14 @@ jobs:
         run: python3 -m py_compile scripts/*.py
 
       - name: Install test dependencies
-        run: python3 -m pip install pytest
+        run: python3 -m pip install "pytest" "detect-secrets>=1.4.0,<2.0.0"
+
+      - name: Secret scanning (TR-PUB-002)
+        run: |
+          detect-secrets scan \
+            --exclude-files '^templates/' \
+            --exclude-files '^examples/' \
+            | python3 -c "import json,sys; r=json.load(sys.stdin).get('results',{}); print('Potential secrets found -- run detect-secrets scan locally to audit' if r else 'OK -- no secrets detected.'); sys.exit(1 if r else 0)"
 
       - name: Unit tests
         run: python3 -m pytest tests/test_public_standards_release.py -q

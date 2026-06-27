@@ -33,7 +33,7 @@ python3 scripts/check-config-consistency.py --app YourApp
 python3 scripts/debt-report.py --path /path/to/your/repo
 ```
 
-## Enforced workflow (v0.1)
+## Enforced workflow
 
 See [`examples/worked-example/`](examples/worked-example/) for a synthetic trace:
 

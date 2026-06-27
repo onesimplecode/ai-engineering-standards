@@ -7,6 +7,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 No unreleased changes.
 
+## [0.2.0] - 2026-06-26
+
+### Added
+
+- Secret-scanning step (`detect-secrets>=1.4,<2`) in `release-check` CI workflow; `^templates/`
+  and `^examples/` path patterns excluded to avoid false positives on placeholder content (TR-PUB-002)
+- `docs/releasing.md` — maintainer release process: export from source, local CI checks,
+  CHANGELOG/ROADMAP updates, tagging, and version numbering convention
+- `examples/worked-example/docs/decisions/ADR-002-example.md` — synthetic ADR illustrating
+  the adoption of EARS syntax for testable requirements
+- `examples/worked-example/docs/decisions/ADR-003-example.md` — synthetic ADR illustrating
+  the four-field loop contract decision (TR-AGT-003)
+
 ## [0.1.0] - 2026-06-19
 
 ### Added
@@ -23,5 +36,6 @@ No unreleased changes.
 - `CONTRIBUTING.md`, `SECURITY.md`, issue/PR templates, `release-check` CI workflow
 - Roadmap and changelog for intentional release cadence
 
-[Unreleased]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/onesimplecode/ai-engineering-standards/releases/tag/v0.1.0

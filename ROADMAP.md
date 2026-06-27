@@ -3,7 +3,7 @@
 Releases are **curated and periodic**, not continuous dumps of unrelated work.
 See `CHANGELOG.md` for shipped versions.
 
-## v0.1 — Public standards baseline (current)
+## v0.1 — Public standards baseline
 
 - [x] Curated TR registry subset
 - [x] Governance templates (ADR, impact assessment, maturity checklist, governance review)
@@ -14,14 +14,15 @@ See `CHANGELOG.md` for shipped versions.
 - [x] Public LLM eval and completion/self-critique templates
 - [x] Unit tests for `public-export-check.py` in CI
 
-## v0.2 — Release hardening
+## v0.2 — Release hardening (current)
 
-- [ ] Add a generic secret-scanning step to the `release-check` CI workflow
-- [ ] Document the maintainer release process
-- [ ] Public-safe process ADR examples explaining the governance decisions
+- [x] Add a generic secret-scanning step to the `release-check` CI workflow
+- [x] Document the maintainer release process
+- [x] Public-safe process ADR examples explaining the governance decisions
 
 ## v0.3 — Enforced workflow example
 
+- [ ] Export MCP tool annotation conventions (TR-AGT-003 field 5) to public `AGENTS.md`
 - [ ] Worked example shows full path: TR-ID → ADR → maturity row → script output → CI gate
 - [ ] Sample GitHub Actions job that fails on config drift
 

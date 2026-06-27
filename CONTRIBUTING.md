@@ -14,7 +14,7 @@ In scope:
 
 Out of scope:
 
-- Support for private LumiaForge applications (JobHunter, SecondBrain, etc.).
+- Support for maintainer-private applications not published in this repository.
 - Generic "make AI better" requests without a concrete standards gap.
 - Requests to add full application frameworks or duplicate `agent-skills` / `AGENTS.md`.
 
