@@ -9,6 +9,7 @@ and examples are maintainer-authored unless a file header states otherwise.
 
 | Source | License | How used |
 |--------|---------|----------|
+| [Yelp/detect-secrets](https://github.com/Yelp/detect-secrets) | Apache-2.0 | Runtime CI dependency used in `release-check` workflow to scan the staging tree for accidental secrets before publish. Installed via pip; no code copied into this repository. |
 | [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | MIT | Process baseline evaluation; ADR lifecycle, CI quality-gate concepts, reviewer procedure patterns. Not a code fork. |
 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | Debt-tag convention, config consistency checking concept; adapted as `LUMIA-DEBT:` / `POC-EXCEPTION:` and `check-config-consistency.py`. |
 | [MODSetter/SurfSense](https://github.com/MODSetter/SurfSense) | Apache-2.0 | Comparative analysis only; selective pattern adoption (RRF, automations) documented in private app ADRs — not shipped as SurfSense code. |
