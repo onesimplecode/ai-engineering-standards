@@ -8,7 +8,7 @@ concrete artifacts. It is intentionally limited to public, reusable evidence.
 | Stable requirement IDs | Machine-readable registry | Documented + reusable | `registry/tr-registry.yaml` |
 | Agent role boundaries | Tool-neutral role specs | Documented | `AGENTS.md`, `agents/*.md` |
 | Private/public data routing | Role split and routing rule | Documented + reviewable | `AGENTS.md`, `agents/private-researcher.md`, `agents/public-researcher.md` |
-| Loop contracts | Required four-field node contract | Documented | `AGENTS.md`, `registry/tr-registry.yaml` |
+| Loop contracts | Required four-field node contract + reference implementation | Documented + Example | `AGENTS.md`, `registry/tr-registry.yaml`, `examples/engine-interface/` |
 | Trigger classification | ADR-triggered trigger type | Documented + example | `examples/worked-example/`, `templates/adr.md` |
 | External content trust boundary | Retrieved content treated as data | Documented | `AGENTS.md`, `registry/tr-registry.yaml` |
 | LLM eval convention | Co-located golden eval files guarded by `LLM_EVAL=true` | Template | `templates/llm-eval.md`, `AGENTS.md` |

@@ -37,6 +37,13 @@ Every multi-step agent node declares four fields before implementation:
 
 Missing any field means the design is incomplete.
 
+**Reference implementation:** `examples/engine-interface/` shows this pattern
+applied to a multi-source polling pipeline (inspired by the SearXNG engine
+interface). Key properties: `source_name` (identity), `default_timeout`
+(budget), `fetch()` that never raises (exit condition = always returns),
+`list[Result]` output (normalized schema). These four map directly to the
+four TR-AGT-003 fields.
+
 The exit condition must be verified by deterministic evidence when the agent
 changes persistent state, writes files, sends messages, or calls tools with side
 effects (TR-TEST-006).
