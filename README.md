@@ -27,7 +27,7 @@ public reuse.
 python3 scripts/public-export-check.py .
 
 # Scan for config/model-string drift (point at your app monorepo)
-python3 scripts/check-config-consistency.py --app YourApp
+python3 scripts/check-config-consistency.py --root /path/to/your/repo --app YourApp
 
 # Report deferred-work tags
 python3 scripts/debt-report.py --path /path/to/your/repo

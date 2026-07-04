@@ -10,7 +10,8 @@
 
 ## Known debt
 
-LUMIA-DEBT: wire check-config-consistency.py into CI (TR-GOV-001)
+None currently open. `check-config-consistency.py` runs against this app in
+`.github/workflows/config-drift-demo.yml` (TR-GOV-001).
 
 ## Privacy (TR-SEC-003)
 

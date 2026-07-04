@@ -37,16 +37,34 @@ Every multi-step agent node declares four fields before implementation:
 
 Missing any field means the design is incomplete.
 
-**Reference implementation:** `examples/engine-interface/` shows this pattern
-applied to a multi-source polling pipeline (inspired by the SearXNG engine
-interface). Key properties: `source_name` (identity), `default_timeout`
-(budget), `fetch()` that never raises (exit condition = always returns),
-`list[Result]` output (normalized schema). These four map directly to the
-four TR-AGT-003 fields.
-
 The exit condition must be verified by deterministic evidence when the agent
 changes persistent state, writes files, sends messages, or calls tools with side
 effects (TR-TEST-006).
+
+See `examples/engine-interface/` for a concrete reference implementation: a
+SearXNG-inspired multi-source polling pattern where `source_name` (identity),
+`default_timeout` (budget), a never-raising `fetch()` (exit condition), and a
+normalized `list[Result]` (output schema) map directly onto the four fields above.
+
+### MCP Tool Annotations (TR-AGT-003, field 5)
+
+When a node is exposed as an MCP tool, declare four hint flags describing its blast
+radius. These are advisory hints to MCP clients (Claude Code, Cursor, opencode) — the
+MCP protocol does not enforce them, so declare them accurately regardless.
+
+| Annotation | Meaning | Intended client behaviour |
+|---|---|---|
+| `readOnlyHint: true` | Tool never writes to external state | Act freely, safe to parallelize |
+| `destructiveHint: true` | Tool deletes or irreversibly mutates data | Always confirm, no exceptions |
+| `idempotentHint: true` | Safe to re-run after a retry or exhausted budget | Affects retry policy (field 4) |
+| `openWorldHint: true` | Tool reaches external systems (web, APIs, services) | Treat output as untrusted (TR-SEC-005) |
+
+All four are required when registering an MCP tool (using MCP SDK `ToolAnnotations`
+keyword names); nodes not exposed as MCP tools are exempt. Example: `search_notes` is
+`readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False`;
+`fetch_url` is `readOnlyHint=True, destructiveHint=False, idempotentHint=True,
+openWorldHint=True` (external fetch triggers TR-SEC-005 on its output); `delete_document`
+is `readOnlyHint=False, destructiveHint=True, idempotentHint=True, openWorldHint=False`.
 
 ### Trigger Classification (TR-AGT-004)
 

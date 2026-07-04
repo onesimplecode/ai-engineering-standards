@@ -12,9 +12,11 @@ This operationalizes the "single source of truth for configurable strings" rule
 described in AGENTS.md. It does not require any third-party dependency.
 
 Usage:
-    python3 scripts/check-config-consistency.py [--app APPNAME ...]
+    python3 scripts/check-config-consistency.py [--root PATH] [--app APPNAME ...]
 
-Exit code 0 if clean, 1 if any retired string or drift is found.
+Exit code 0 if clean, 1 if any retired string or drift is found, 2 on a
+usage error (--root doesn't exist, an --app name that doesn't resolve to a
+scanned directory, or zero apps discovered under --root).
 """
 
 from __future__ import annotations
@@ -78,14 +80,14 @@ def scan_files(app_dir: Path) -> list[Path]:
     return [f for f in files if f.is_file()]
 
 
-def check_app(app_dir: Path) -> list[str]:
+def check_app(app_dir: Path, root: Path) -> list[str]:
     """Return a list of human-readable issue lines for one app."""
     issues: list[str] = []
     # family -> normalized value -> list of "file:line"
     family_hits: dict[str, dict[str, list[str]]] = {f: {} for f in FAMILY_PATTERNS}
 
     for path in scan_files(app_dir):
-        rel = path.relative_to(REPO_ROOT)
+        rel = path.relative_to(root)
         try:
             lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
         except OSError:
@@ -115,18 +117,38 @@ def check_app(app_dir: Path) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--root", default=str(REPO_ROOT),
+        help="Repo root to scan for app directories (default: this script's own repo root).",
+    )
+    parser.add_argument(
         "--app", action="append", dest="apps",
         help="Limit to one or more app directory names (repeatable). Default: all apps.",
     )
     args = parser.parse_args()
 
-    apps = discover_apps(REPO_ROOT)
+    root = Path(args.root).resolve()
+    if not root.is_dir():
+        print(f"--root does not exist or is not a directory: {root}", file=sys.stderr)
+        return 2
+    discovered = discover_apps(root)
+
     if args.apps:
-        apps = [a for a in apps if a.name in args.apps]
+        known_names = {a.name for a in discovered}
+        unknown = [name for name in args.apps if name not in known_names]
+        if unknown:
+            print(f"Unknown app(s): {', '.join(unknown)}. Known: {', '.join(sorted(known_names))}", file=sys.stderr)
+            return 2
+        apps = [a for a in discovered if a.name in args.apps]
+    else:
+        apps = discovered
+
+    if not apps:
+        print(f"No apps discovered under {root} (looked for a CLAUDE.md in each top-level directory).", file=sys.stderr)
+        return 2
 
     any_issue = False
     for app_dir in apps:
-        issues = check_app(app_dir)
+        issues = check_app(app_dir, root)
         if issues:
             any_issue = True
             print(f"{app_dir.name}:")

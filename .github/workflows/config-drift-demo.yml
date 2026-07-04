@@ -1,0 +1,51 @@
+name: Config drift demo (worked example)
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/check-config-consistency.py'
+      - 'examples/worked-example/**'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/check-config-consistency.py'
+      - 'examples/worked-example/**'
+  workflow_dispatch: {}
+
+# ---------------------------------------------------------------------------
+# This job does NOT gate this repo's own config -- it proves that
+# check-config-consistency.py (TR-GOV-001) correctly detects the drift
+# planted in examples/worked-example/sample-app (gemma4:31b in CLAUDE.md
+# vs gemma4:26b in config/search_config.yaml.example -- see
+# examples/worked-example/README.md). Here, the detector *failing* on the
+# fixture is success; if it ever passes clean, the fixture or the detector
+# itself has regressed.
+#
+# A downstream user copies this pattern into their own app's CI, pointed at
+# their own --root, where a real drift SHOULD fail the build (see
+# docs/releasing.md and the sample release-check.yml in this repo for what
+# a real, blocking gate looks like).
+# ---------------------------------------------------------------------------
+
+jobs:
+  demo-detects-drift:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+
+      - uses: actions/setup-python@v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Assert check-config-consistency.py catches the planted drift
+        run: |
+          set +e
+          python3 scripts/check-config-consistency.py --root examples/worked-example
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "::error::Expected exit 1 (DRIFT detected) against examples/worked-example/sample-app, got exit $code instead -- the fixture or detector regressed."
+            exit 1
+          fi
+          echo "Confirmed: check-config-consistency.py correctly detected the planted local-gemma-model drift (exit 1)."

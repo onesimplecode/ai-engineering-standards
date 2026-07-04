@@ -76,7 +76,9 @@ requirements:
     section: "Agent Spawning"
     text: >
       Every agent pipeline node declares input schema, output schema, exit condition,
-      and resource budget before implementation.
+      and resource budget before implementation. Nodes exposed as MCP tools additionally
+      declare four tool annotation hints (readOnlyHint, destructiveHint, idempotentHint,
+      openWorldHint) describing blast radius — required only for MCP-exposed nodes.
 
   - id: TR-AGT-002
     title: Deterministic operations use scripts not agents
@@ -205,3 +207,13 @@ requirements:
     text: >
       Public repo maintains ROADMAP.md and CHANGELOG.md with periodic curated releases,
       not continuous private-repo mirroring.
+
+  - id: TR-PUB-006
+    title: Agent persona drift check between private and public trees
+    status: active
+    section: "Public Release"
+    text: >
+      A drift check compares the last-changed time of each private operating persona
+      against its public-standards rewrite and fails if the private side changed more
+      recently. This does not auto-sync content — the public rewrite stays hand-curated
+      — it only forces a human reconciliation decision instead of silent drift.
