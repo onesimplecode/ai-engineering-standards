@@ -32,7 +32,8 @@ detect-secrets scan \
   --exclude-files '^templates/' \
   --exclude-files '^examples/' \
   | python3 -c "import json,sys; r=json.load(sys.stdin).get('results',{}); print('Potential secrets found -- run detect-secrets scan locally to audit' if r else 'OK -- no secrets detected.'); sys.exit(1 if r else 0)"
-python3 -m pytest tests/test_public_standards_release.py -q
+python3 scripts/cursor-rules-adapter.py --out examples/cursor-rules/.cursor/rules --check
+python3 -m pytest tests -q
 ```
 
 All checks must pass before proceeding. Repeat this step after completing steps 3–5 to
@@ -84,3 +85,7 @@ Follows SemVer-lite (`MAJOR.MINOR.PATCH`):
 - Confirm CI passes on the tagged commit.
 - Verify the GitHub Release page renders correctly.
 - Check that the comparison URL in `CHANGELOG.md` resolves on GitHub.
+- Verify the published tree matches the release source exactly — compare with a
+  content-based diff (`diff -r`, or `rsync -rcn --delete`), not a size/mtime quick-check.
+  The v0.3.0 publish silently dropped a `ROADMAP.md` checkbox update because
+  `[ ]` → `[x]` is byte-size-neutral and the sync compared only size and mtime.

@@ -22,6 +22,9 @@ jobs:
       - name: Compile Python scripts
         run: python3 -m py_compile scripts/*.py
 
+      - name: Cursor rules drift gate
+        run: python3 scripts/cursor-rules-adapter.py --out examples/cursor-rules/.cursor/rules --check
+
       - name: Install test dependencies
         run: python3 -m pip install "pytest" "detect-secrets>=1.4.0,<2.0.0"
 
@@ -33,4 +36,4 @@ jobs:
             | python3 -c "import json,sys; r=json.load(sys.stdin).get('results',{}); print('Potential secrets found -- run detect-secrets scan locally to audit' if r else 'OK -- no secrets detected.'); sys.exit(1 if r else 0)"
 
       - name: Unit tests
-        run: python3 -m pytest tests/test_public_standards_release.py -q
+        run: python3 -m pytest tests -q

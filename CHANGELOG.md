@@ -5,6 +5,70 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-10
+
+### Added
+
+- `AGENTS.md` — new "Behavioral Modes (TR-AGT-005)" section: a named,
+  trigger-activated instruction set changing how an agent approaches a task,
+  orthogonal to process-intensity gate strictness; each mode declares a trigger,
+  activated behavior, exit condition, and precedence. `registry/tr-registry.yaml`
+  gains the `TR-AGT-005` entry and `docs/requirements-implementation-map.md` a
+  "Behavioral mode declaration" row. (Committed to the release source 2026-07-04,
+  shortly after the v0.3.0 publish.)
+- `scripts/cursor-rules-adapter.py` — Cursor rules adapter (v0.4 roadmap item 1):
+  generates `.cursor/rules/*.mdc` project rules from the coding-relevant subset of
+  `registry/tr-registry.yaml` (active requirements only, `TR-PUB-*` excluded;
+  safety-critical sections `alwaysApply: true`, the rest description-attached).
+  `--check` mode reports changed/missing/stale files so CI can gate the committed
+  export. Stdlib-only with the same exit-0/1/2 contract as
+  `check-config-consistency.py`; pinned by `tests/test_cursor_rules_adapter.py`.
+- `examples/cursor-rules/` — pregenerated `.mdc` export of the current registry plus
+  a usage README; `release-check` CI now runs the adapter in `--check` mode so this
+  copy cannot drift from the registry.
+- `docs/agent-skills-integration.md` — how this repo complements (not competes with)
+  `agent-skills` collections (v0.4 roadmap item 2): skills are the task layer, the
+  registry is the constraint layer; integration via TR-ID citations in skills,
+  generated editor context (the Cursor adapter as the working example), and
+  governance gates around skill output.
+- `AGENTS.md` — new "Declarative Agent Profiles" section: unattended agent profiles are
+  versioned YAML declarations (prompt, tools, routes, policy reference, trigger class,
+  loop contracts) loaded by the runtime, never embedded in code — behavior changes become
+  diffable PRs, and a profile survives re-hosting between a long-running host and an
+  ephemeral CI job unchanged.
+- `AGENTS.md` — new "Layered Policy Schema" section: three stacking policy levels
+  (global / profile / run) in one versioned schema with two machine-checked invariants —
+  a child level may only tighten its parent, and any cap change must keep the worst-case
+  spend sum within the documented budget ceiling. Run-level budget is TR-AGT-003 field 4
+  expressed as config. Both patterns originated in the maintainer's private platform
+  design and were cross-validated against publicly documented agent-configuration and
+  policy-stacking conventions.
+
+### Changed
+
+- `.github/workflows/release-check.yml` — unit-test step now runs the whole `tests/`
+  directory (previously only `test_public_standards_release.py`, which silently
+  skipped `test_check_config_consistency.py` in the public repo) and adds the
+  Cursor-rules drift gate.
+- `docs/releasing.md` — post-release checklist now requires verifying the published
+  tree with a content-based diff; the v0.3.0 publish silently dropped a
+  byte-size-neutral `ROADMAP.md` checkbox update because the sync compared only
+  size and mtime.
+
+### Fixed
+
+- `scripts/check-config-consistency.py` — `SCAN_GLOBS` had two overlapping patterns
+  (`config/*.yaml.example` and `config/*.example`) that both matched
+  `search_config.yaml.example`, double-counting the file and duplicating its DRIFT
+  location in output. Deduped `scan_files()` by path.
+- `tests/test_check_config_consistency.py` — first unit test coverage for
+  `check-config-consistency.py`; pins the exit-0/1/2 contract described in its own
+  docstring and the SCAN_GLOBS dedup above.
+- `.github/pull_request_template.md` — the "if example app touched" checklist item
+  told contributors to run the checker with no args, which always exits 2 in this
+  repo (no top-level app directories exist to discover); corrected to the invocation
+  `config-drift-demo.yml` actually uses.
+
 ## [0.3.0] - 2026-07-04
 
 ### Added
@@ -89,7 +153,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `CONTRIBUTING.md`, `SECURITY.md`, issue/PR templates, `release-check` CI workflow
 - Roadmap and changelog for intentional release cadence
 
-[Unreleased]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/onesimplecode/ai-engineering-standards/releases/tag/v0.1.0

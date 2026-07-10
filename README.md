@@ -17,7 +17,7 @@ public reuse.
 | Machine-readable requirement registry (`registry/tr-registry.yaml`) | Production runtime or hosted services |
 | Portable agent conventions (`AGENTS.md`, `agents/`) | Tool-specific private agent sessions |
 | Governance and eval templates (ADR, impact assessment, maturity checklist, LLM eval, completion checklist) | Full application frameworks |
-| Reference scripts (config drift, debt tags, release validation) | Full `agent-skills` replacement |
+| Reference scripts (config drift, debt tags, release validation, Cursor rule export) | Full `agent-skills` replacement |
 | Synthetic worked example | Personal data |
 
 ## Quick start
@@ -31,6 +31,9 @@ python3 scripts/check-config-consistency.py --root /path/to/your/repo --app Your
 
 # Report deferred-work tags
 python3 scripts/debt-report.py --path /path/to/your/repo
+
+# Export the registry as Cursor project rules (see examples/cursor-rules/)
+python3 scripts/cursor-rules-adapter.py --out /path/to/your/repo/.cursor/rules
 ```
 
 ## Enforced workflow
@@ -55,7 +58,8 @@ See [`examples/worked-example/`](examples/worked-example/) for a synthetic trace
 
 ## Positioning
 
-- **Complements** [AGENTS.md](https://agents.md), [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), and runtime governance tools.
+- **Complements** [AGENTS.md](https://agents.md), [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), and runtime governance tools —
+  see [`docs/agent-skills-integration.md`](docs/agent-skills-integration.md) for the layer split and integration patterns.
 - **Differentiator:** design-time traceability — requirement IDs, PII routing rules, loop contracts,
   trigger classification, and scriptable drift detection.
 

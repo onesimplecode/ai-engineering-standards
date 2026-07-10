@@ -14,7 +14,7 @@ See `CHANGELOG.md` for shipped versions.
 - [x] Public LLM eval and completion/self-critique templates
 - [x] Unit tests for `public-export-check.py` in CI
 
-## v0.2 — Release hardening (current)
+## v0.2 — Release hardening
 
 - [x] Add a generic secret-scanning step to the `release-check` CI workflow
 - [x] Document the maintainer release process
@@ -22,14 +22,28 @@ See `CHANGELOG.md` for shipped versions.
 
 ## v0.3 — Enforced workflow example
 
-- [ ] Export MCP tool annotation conventions (TR-AGT-003 field 5) to public `AGENTS.md`
-- [ ] Worked example shows full path: TR-ID → ADR → maturity row → script output → CI gate
-- [ ] Sample GitHub Actions job that fails on config drift
+- [x] Export MCP tool annotation conventions (TR-AGT-003 field 5) to public `AGENTS.md`
+- [x] Worked example shows full path: TR-ID → ADR → maturity row → script output → CI gate
+- [x] Sample GitHub Actions job that fails on config drift
 
-## v0.4 — Cross-tool adapters
+## v0.4 — Cross-tool adapters (current)
 
-- [ ] Cursor rules adapter generated from TR registry subset
-- [ ] Document integration with `agent-skills` (complement, not compete)
+- [x] Cursor rules adapter generated from TR registry subset
+- [x] Document integration with `agent-skills` (complement, not compete)
+
+## v0.5 — CI-enforced security guardrails
+
+- [ ] "Make dangerous changes loud, not impossible" guard pattern: a script that
+      hard-codes the reviewed baseline (permissions allowlist, required
+      ignore-rules, forbidden lifecycle scripts) and fails CI on any drift,
+      forcing the widening diff and the allowlist update into the same PR
+      (worked example: `MadsLorentzen/ai-job-search`'s `tools/security_guards.py`
+      + `.github/workflows/ci.yml`)
+- [ ] Document as a public governance pattern: co-locate the guard with its own
+      allowlist (not a separate config file), state the honest limit inline
+      (a PR can edit the workflow itself — this catches accidents/casual
+      attempts, not a determined author; branch protection + human review of
+      workflow/settings diffs remain the real backstop)
 
 ## Non-goals
 

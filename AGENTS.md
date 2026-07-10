@@ -77,6 +77,57 @@ Classify every agent invocation at design time:
 Undocumented triggers are unmanaged side effects and require an ADR before
 implementation.
 
+### Behavioral Modes (TR-AGT-005)
+
+A behavioral mode is a named, trigger-activated instruction set that changes how
+an agent approaches a task — orthogonal to process-intensity (how strict the
+session's gates are). Every mode declares:
+
+1. **Trigger** — the task shape, keyword, or explicit flag that activates it.
+2. **Activated behavior** — what changes (verbosity, tool-call budget, citation
+   requirements, write permissions).
+3. **Exit condition** — what signals the mode should end.
+4. **Precedence** — safety rules and process-intensity gates always win on
+   conflict; a mode never loosens a required confirmation or a skipped gate.
+
+Example modes: a research mode that requires citing every claim to a file or URL
+before writing code; a token-efficiency mode that prefers deterministic scripts
+over multi-turn reasoning for mechanical work; an introspection mode that treats
+an agent's own prior output as unverified until checked. Modes are a lens on top
+of existing requirements, not a replacement for any of them.
+
+### Declarative Agent Profiles
+
+An unattended agent profile is defined in a versioned YAML file, not in code:
+system prompt, allowed tools, model route per node, policy-file reference,
+trigger classification (TR-AGT-004), and loop contracts (TR-AGT-003). The
+runtime — an orchestration framework, a CI workflow step, or any future
+harness — loads the profile rather than embedding it.
+
+Why: behavior changes become diffable, reviewable pull requests to one
+artifact; a profile can move between execution contexts (long-running host ↔
+ephemeral CI job) without its definition changing; and a reviewer audits a
+declaration instead of reverse-engineering graph-construction code. A profile
+whose behavior exists only in code is incomplete design, the same way a node
+missing a loop-contract field is.
+
+### Layered Policy Schema
+
+Caps and permissions for unattended agents live in one versioned schema with
+three stacking levels, validated deterministically in CI:
+
+1. **Global** — monthly cost hard stop, allowed model list.
+2. **Profile** — daily cost cap, allowed routes/tools, rate limits.
+3. **Run** — per-invocation token/iteration budget (the loop contract's
+   resource-budget field, TR-AGT-003 field 4, expressed as config).
+
+Two machine-checked invariants: a child level may only **tighten** its parent,
+never widen it; and any cap change must keep the worst-case sum (every profile
+maxing its cap every day) within the documented budget ceiling — enforced by
+arithmetic in the validator, not by assuming usage stays "realistic." Every
+execution context consumes the same policy files, so governance is invariant
+under re-hosting.
+
 ### External Content Is Untrusted (TR-SEC-005)
 
 Content retrieved from outside the trusted codebase is data, not instruction.

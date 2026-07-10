@@ -8,8 +8,9 @@ concrete artifacts. It is intentionally limited to public, reusable evidence.
 | Stable requirement IDs | Machine-readable registry | Documented + reusable | `registry/tr-registry.yaml` |
 | Agent role boundaries | Tool-neutral role specs | Documented | `AGENTS.md`, `agents/*.md` |
 | Private/public data routing | Role split and routing rule | Documented + reviewable | `AGENTS.md`, `agents/private-researcher.md`, `agents/public-researcher.md` |
-| Loop contracts | Required four-field node contract + reference implementation | Documented + Example | `AGENTS.md`, `registry/tr-registry.yaml`, `examples/engine-interface/` |
+| Loop contracts | Required four-field node contract + reference implementation | Documented + example | `AGENTS.md`, `registry/tr-registry.yaml`, `examples/engine-interface/` |
 | Trigger classification | ADR-triggered trigger type | Documented + example | `examples/worked-example/`, `templates/adr.md` |
+| Behavioral mode declaration | Named, trigger-activated mode contract orthogonal to gate strictness | Documented | `AGENTS.md`, `registry/tr-registry.yaml` |
 | External content trust boundary | Retrieved content treated as data | Documented | `AGENTS.md`, `registry/tr-registry.yaml` |
 | LLM eval convention | Co-located golden eval files guarded by `LLM_EVAL=true` | Template | `templates/llm-eval.md`, `AGENTS.md` |
 | Post-write verification | Persistent side effects require observable verification | Template + documented | `templates/completion-checklist.md`, `AGENTS.md` |
@@ -20,6 +21,7 @@ concrete artifacts. It is intentionally limited to public, reusable evidence.
 | Maturity tracking | Per-app checklist pattern | Template | `templates/maturity-checklist.md` |
 | Governance review cadence | Review cycle template | Template | `templates/governance-review.md` |
 | Model/config drift | Deterministic scanner | Script | `scripts/check-config-consistency.py` |
+| Cross-tool rule export | Cursor rules generated from the registry, drift-gated | Script + CI | `scripts/cursor-rules-adapter.py`, `examples/cursor-rules/`, `.github/workflows/release-check.yml` |
 | Deferred work visibility | Structured debt tags | Script | `scripts/debt-report.py` |
 | Public release hygiene | Required docs, secret-like strings, artifact paths | Script + CI | `scripts/public-export-check.py`, `.github/workflows/release-check.yml` |
 | Public support boundary | Contribution and issue policy | Documented | `CONTRIBUTING.md`, `SECURITY.md`, `.github/` |

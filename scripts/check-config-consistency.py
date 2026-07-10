@@ -74,10 +74,16 @@ def discover_apps(root: Path) -> list[Path]:
 
 
 def scan_files(app_dir: Path) -> list[Path]:
-    files: list[Path] = []
+    # dict, not list/set: some SCAN_GLOBS overlap (e.g. "config/*.yaml.example" and
+    # "config/*.example" both match "search_config.yaml.example"); dedupe by path
+    # while preserving order so a file isn't scanned — and its lines double-counted
+    # in DRIFT locations — once per matching glob.
+    seen: dict[Path, None] = {}
     for pattern in SCAN_GLOBS:
-        files.extend(sorted(app_dir.glob(pattern)))
-    return [f for f in files if f.is_file()]
+        for f in sorted(app_dir.glob(pattern)):
+            if f.is_file():
+                seen.setdefault(f, None)
+    return list(seen)
 
 
 def check_app(app_dir: Path, root: Path) -> list[str]:

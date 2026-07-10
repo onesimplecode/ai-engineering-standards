@@ -97,6 +97,16 @@ requirements:
       Each agent invocation is classified as event-driven, scheduled, or user-initiated.
       Undocumented triggers are non-compliant unmanaged side effects.
 
+  - id: TR-AGT-005
+    title: Behavioral mode declaration
+    status: active
+    section: "Agent Spawning"
+    text: >
+      A behavioral mode is a named, trigger-activated instruction set that changes how
+      an agent approaches a task, orthogonal to process-intensity gate strictness. Each
+      mode declares a trigger, activated behavior, exit condition, and precedence
+      (safety and process-intensity rules always win on conflict).
+
   - id: TR-TEST-005
     title: LLM eval files co-located with agent modules
     status: active

@@ -14,7 +14,10 @@
 
 - [ ] `python3 scripts/public-export-check.py .` (or staging path)
 - [ ] `python3 -m py_compile scripts/*.py`
-- [ ] `python3 scripts/check-config-consistency.py` (if example app touched)
+- [ ] `python3 scripts/check-config-consistency.py --root examples/worked-example --app sample-app`
+      (if `examples/worked-example` touched — the bare no-args form always exits 2 in this
+      repo, since it has no top-level app directories to discover; see
+      `.github/workflows/config-drift-demo.yml`)
 
 ## Attribution
 
