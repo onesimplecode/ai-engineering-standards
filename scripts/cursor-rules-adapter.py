@@ -5,9 +5,10 @@ Cursor rules adapter — generates .cursor/rules/*.mdc from the TR registry.
 Exports the coding-relevant subset of registry/tr-registry.yaml as Cursor
 project rules (MDC format: https://cursor.com/docs/context/rules), one file
 per registry section. Safety-critical sections (secrets, data privacy, prompt
-injection) are emitted with `alwaysApply: true`; every other section relies on
-its `description` for agent-requested attachment. "Public Release" requirements
-govern this repository's own release operations, not coding, and are excluded.
+injection, agent security) are emitted with `alwaysApply: true`; every other
+section relies on its `description` for agent-requested attachment. "Public
+Release" requirements govern this repository's own release operations, not
+coding, and are excluded.
 
 Generated files carry a provenance marker and must never be hand-edited —
 rerun this script instead. `--check` verifies an existing output directory
@@ -47,7 +48,7 @@ EXCLUDED_SECTIONS = {"Public Release"}
 # Safety-critical sections are always in context; everything else attaches
 # via its description (Cursor's "Apply Intelligently" type). "Agents" is in
 # the set because it carries TR-SEC-003 (PII routes to local LLMs only).
-ALWAYS_APPLY_SECTIONS = {"Secrets Management", "Data Privacy", "Prompt Injection", "Agents"}
+ALWAYS_APPLY_SECTIONS = {"Secrets Management", "Data Privacy", "Prompt Injection", "Agents", "Agent Security"}
 
 # Statuses the registry is allowed to use; anything else is a typo until the
 # registry (and this set) are extended deliberately.

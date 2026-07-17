@@ -17,7 +17,7 @@ public reuse.
 | Machine-readable requirement registry (`registry/tr-registry.yaml`) | Production runtime or hosted services |
 | Portable agent conventions (`AGENTS.md`, `agents/`) | Tool-specific private agent sessions |
 | Governance and eval templates (ADR, impact assessment, maturity checklist, LLM eval, completion checklist) | Full application frameworks |
-| Reference scripts (config drift, debt tags, release validation, Cursor rule export) | Full `agent-skills` replacement |
+| Reference scripts (config drift, debt tags, release validation, Cursor rule export, llms.txt manifest, agent permission guard) | Full `agent-skills` replacement |
 | Synthetic worked example | Personal data |
 
 ## Quick start
@@ -34,6 +34,12 @@ python3 scripts/debt-report.py --path /path/to/your/repo
 
 # Export the registry as Cursor project rules (see examples/cursor-rules/)
 python3 scripts/cursor-rules-adapter.py --out /path/to/your/repo/.cursor/rules
+
+# Regenerate this repo's own llms.txt cross-tool discovery manifest
+python3 scripts/llms-txt-generator.py
+
+# Check an agent settings file's tool-permission grants against a reviewed baseline
+python3 scripts/agent-permission-guard.py --settings /path/to/your/settings.json
 ```
 
 ## Enforced workflow
@@ -41,6 +47,12 @@ python3 scripts/cursor-rules-adapter.py --out /path/to/your/repo/.cursor/rules
 See [`examples/worked-example/`](examples/worked-example/) for a synthetic trace:
 
 **TR-AGT-004** → ADR → maturity checklist row → `LUMIA-DEBT:` tag → `check-config-consistency.py`
+
+See [`examples/agent-permission-guard/`](examples/agent-permission-guard/) for the
+security guardrail trace (TR-SEC-010): a planted wildcard grant and an
+unreviewed grant, both caught by `scripts/agent-permission-guard.py`'s
+co-located reviewed baseline — the "make dangerous changes loud, not
+impossible" pattern.
 
 ## Public Evidence Map
 
@@ -55,6 +67,12 @@ See [`examples/worked-example/`](examples/worked-example/) for a synthetic trace
 - [`templates/llm-eval.md`](templates/llm-eval.md) and
   [`templates/completion-checklist.md`](templates/completion-checklist.md) —
   eval and self-critique patterns that make agent output reviewable.
+- [`llms.txt`](llms.txt) — generated, drift-gated cross-tool discovery manifest
+  (registry + agent roles + templates + scripts) following the emerging
+  llms.txt convention (https://llmstxt.org); regenerate with
+  `scripts/llms-txt-generator.py`. Generated at this repo's own root only —
+  unlike the Cursor adapter, there's no `examples/llms-txt/` export target,
+  since this manifest describes this repo, not a repo you'd point it at.
 
 ## Positioning
 

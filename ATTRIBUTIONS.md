@@ -18,6 +18,15 @@ and examples are maintainer-authored unless a file header states otherwise.
 | AGENTS.md ecosystem | Open standard | Complementary positioning; this repo focuses on governance/traceability, not replacing AGENTS.md. |
 | [Microsoft Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit) | (see upstream) | Comparative positioning only; this repo focuses on design-time and repo-time standards, not runtime agent governance. |
 | Dify and similar RAG/agent platforms | (varies by project) | Comparative positioning only; no code, docs, or implementation copied. |
+| [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search) | (see upstream) | Comparative pattern reference for `scripts/agent-permission-guard.py` (TR-SEC-010, v0.5): the idea of a script that hard-codes a reviewed baseline and fails CI on drift, popularized by that repo's `tools/security_guards.py` + `.github/workflows/ci.yml`. This repo's script is an independent implementation (JSON allowlist parsing, forbidden-pattern regexes, exit-0/1/2 CLI contract) — no code copied. |
+
+## Ideas and vocabulary (not software)
+
+| Source | How used |
+|--------|----------|
+| MITRE ATT&CK (https://attack.mitre.org/) and MITRE ATLAS (https://atlas.mitre.org/) | Public technique catalogs cited by TR-ID and by name in `registry/tr-registry.yaml` and `templates/threat-model.md` to give threat-model findings a shared, falsifiable vocabulary. No content reproduced beyond technique IDs and short names. |
+| Anthropic, "Zero Trust for AI Agents" (2026) | Source of the "impossible vs. tedious" design test (`templates/threat-model.md`, `AGENTS.md`) — the barrier-vs-friction classification of a mitigation's real strength. Concept adopted and reworded; no text reproduced. |
+| OWASP agentic application security guidance | Source of the "least agency" framing applied to TR-SEC-010 (`AGENTS.md`) — least privilege extended to what an agent tool can do, how often, and where. Concept and term adopted; no text reproduced. |
 
 ## Standards (document shapes, not certification)
 

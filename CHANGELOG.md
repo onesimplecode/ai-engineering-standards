@@ -5,6 +5,76 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-16
+
+### Added
+
+- `registry/tr-registry.yaml` — TR-SEC-008 (local credential files
+  permission-restricted and secret-scanned), TR-SEC-009 (CI pipelines run
+  least-privilege and fully pinned), TR-SEC-010 (agent tool permission grants
+  are a security boundary — least agency), exported from the private
+  ATT&CK/ATLAS-informed security baseline (ADR-009)
+- `templates/threat-model.md` — design-stage threat model mapping trust
+  boundaries and data classification to MITRE ATT&CK/ATLAS techniques,
+  required for ADRs introducing a new listener, credential, agent tool grant,
+  or external content source; includes the "Impossible vs. Tedious" section
+  (barrier vs. friction classification, from Anthropic's *Zero Trust for AI
+  Agents*, ADR-010)
+- `AGENTS.md` — "Threat Modeling and Least Agency" section presenting the
+  impossible-vs-tedious test and TR-SEC-010 under the industry "least agency"
+  name (OWASP), with citations
+- `AGENTS.md` — "Guard Pattern: Co-located Reviewed Baselines" section
+  documenting the "make dangerous changes loud, not impossible" governance
+  pattern, including its honest limit
+- `scripts/agent-permission-guard.py` — reference implementation of the
+  co-located-baseline guard pattern for TR-SEC-010: hard-codes a reviewed set
+  of agent tool-permission grants, fails on any forbidden wildcard
+  write/install/exec/network grant, and fails on any grant absent from the
+  baseline until a human adds it in the same PR. Exit-0/1/2 CLI contract
+  matching the existing scripts; 7 tests in `tests/test_agent_permission_guard.py`
+- `examples/agent-permission-guard/` — worked example: a settings file with a
+  planted forbidden grant and a planted unreviewed grant, both caught by the
+  guard; `.github/workflows/agent-permission-guard-demo.yml` gates this in CI
+  the same way `config-drift-demo.yml` gates the config-drift worked example
+- `examples/worked-example/docs/decisions/ADR-004-example.md` — synthetic ADR
+  illustrating the security-baseline decision (public-safe rewrite of the
+  private ADR-009 pattern)
+- `scripts/llms-txt-generator.py` — generates `llms.txt` (v0.5 roadmap item) at repo
+  root from the coding-relevant TR registry subset plus `agents/`, `templates/`, and
+  `scripts/`, following the emerging llms.txt convention (https://llmstxt.org) so any
+  agent framework that reads it — not only Cursor — can discover this repo's content.
+  Generalizes `scripts/cursor-rules-adapter.py`'s "generate editor/agent context from
+  the registry" pattern (`docs/agent-skills-integration.md` integration pattern 2):
+  dynamically loads and reuses the Cursor adapter's registry parser and subset
+  selection (`importlib`, since the adapter's filename is hyphenated and not
+  import-able as a normal module) rather than re-implementing YAML parsing.
+  `--check` drift-gates the committed `llms.txt` in `release-check.yml`, alongside
+  the existing Cursor rules drift gate. 15 new tests
+  (`tests/test_llms_txt_generator.py`), following the same subprocess-CLI testing
+  pattern as `tests/test_cursor_rules_adapter.py`.
+
+### Changed
+
+- `.github/workflows/release-check.yml` and `.github/workflows/config-drift-demo.yml` —
+  added an explicit least-privilege `permissions: contents: read` block and pinned
+  `actions/checkout` and `actions/setup-python` to full commit SHAs (human-readable
+  version in a trailing comment) to comply with the TR-SEC-009 this release exports;
+  previously pinned to mutable version tags
+- `ATTRIBUTIONS.md` — added rows for MITRE ATT&CK/ATLAS, Anthropic's *Zero Trust for
+  AI Agents*, OWASP agentic security guidance, and `MadsLorentzen/ai-job-search`
+  (comparative pattern reference for the guard script; no code copied)
+- `docs/requirements-implementation-map.md` — rows for threat modeling, impossible-vs-tedious,
+  least agency, the co-located guard pattern, and CI least-privilege/SHA pinning
+- `README.md` — Quick start command for `agent-permission-guard.py`; Enforced workflow
+  section links the new `examples/agent-permission-guard/` trace
+- `ROADMAP.md` — generalized two private app names in the v0.6 section's prose
+  (private-repo ADR citations) to `private-repo ADR-NNN`; the private repo's
+  own leak-scan pattern only matched a trailing `/` and missed bare-word
+  mentions, so this shipped in staging undetected until a dedicated review
+  caught it before this tag was finalized. `docs/releasing.md` now requires
+  running the private repo's leak scan as a mandatory pre-flight step
+  (word-boundary matching fixed in the same change, private-repo only)
+
 ## [0.4.0] - 2026-07-10
 
 ### Added
@@ -153,7 +223,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `CONTRIBUTING.md`, `SECURITY.md`, issue/PR templates, `release-check` CI workflow
 - Roadmap and changelog for intentional release cadence
 
-[Unreleased]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/onesimplecode/ai-engineering-standards/compare/v0.1.0...v0.2.0

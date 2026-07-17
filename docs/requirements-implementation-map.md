@@ -12,6 +12,11 @@ concrete artifacts. It is intentionally limited to public, reusable evidence.
 | Trigger classification | ADR-triggered trigger type | Documented + example | `examples/worked-example/`, `templates/adr.md` |
 | Behavioral mode declaration | Named, trigger-activated mode contract orthogonal to gate strictness | Documented | `AGENTS.md`, `registry/tr-registry.yaml` |
 | External content trust boundary | Retrieved content treated as data | Documented | `AGENTS.md`, `registry/tr-registry.yaml` |
+| Design-time threat modeling | Trust boundaries, data classification, and ATT&CK/ATLAS technique mapping required for new listeners/credentials/tool grants/content sources | Template + example | `templates/threat-model.md`, `examples/worked-example/docs/decisions/ADR-004-example.md` |
+| Impossible vs. tedious control classification | Every threat-model mitigation classified barrier vs. friction, with a named backstop for friction controls | Documented + template | `AGENTS.md`, `templates/threat-model.md` |
+| Least agency / agent permission grants | No wildcard write/install/exec/network grants in agent allowlists | Documented | `AGENTS.md`, `registry/tr-registry.yaml` |
+| Co-located reviewed-baseline guard pattern | Hard-coded baseline lives in the enforcing script itself, forcing the widening diff into the same PR | Documented + script + example | `AGENTS.md`, `scripts/agent-permission-guard.py`, `examples/agent-permission-guard/`, `.github/workflows/agent-permission-guard-demo.yml` |
+| CI least-privilege and SHA pinning | Explicit `permissions:` block per workflow; third-party actions pinned to a full commit SHA | Documented + CI | `registry/tr-registry.yaml`, `.github/workflows/*.yml` |
 | LLM eval convention | Co-located golden eval files guarded by `LLM_EVAL=true` | Template | `templates/llm-eval.md`, `AGENTS.md` |
 | Post-write verification | Persistent side effects require observable verification | Template + documented | `templates/completion-checklist.md`, `AGENTS.md` |
 | Provider prompt portability | Provider-specific system prompt variants isolated from business logic | Documented | `AGENTS.md` |
@@ -22,6 +27,7 @@ concrete artifacts. It is intentionally limited to public, reusable evidence.
 | Governance review cadence | Review cycle template | Template | `templates/governance-review.md` |
 | Model/config drift | Deterministic scanner | Script | `scripts/check-config-consistency.py` |
 | Cross-tool rule export | Cursor rules generated from the registry, drift-gated | Script + CI | `scripts/cursor-rules-adapter.py`, `examples/cursor-rules/`, `.github/workflows/release-check.yml` |
+| Cross-tool discovery manifest | `llms.txt` generated from the registry, agent roles, templates, and scripts, drift-gated | Script + CI | `scripts/llms-txt-generator.py`, `llms.txt`, `.github/workflows/release-check.yml` |
 | Deferred work visibility | Structured debt tags | Script | `scripts/debt-report.py` |
 | Public release hygiene | Required docs, secret-like strings, artifact paths | Script + CI | `scripts/public-export-check.py`, `.github/workflows/release-check.yml` |
 | Public support boundary | Contribution and issue policy | Documented | `CONTRIBUTING.md`, `SECURITY.md`, `.github/` |

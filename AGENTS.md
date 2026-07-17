@@ -128,6 +128,52 @@ arithmetic in the validator, not by assuming usage stays "realistic." Every
 execution context consumes the same policy files, so governance is invariant
 under re-hosting.
 
+### Threat Modeling and Least Agency (TR-SEC-008/009/010)
+
+Attach `templates/threat-model.md` to any ADR introducing a new network
+listener, credential, agent tool permission grant, or external content
+source. Two design-time tests make the model enforceable rather than
+decorative:
+
+- **Impossible vs. tedious.** For every mitigation, ask: does it remove the
+  attack capability (a **barrier**), or only raise its cost (**friction**)?
+  Agentic attackers have unlimited patience and near-zero per-attempt cost,
+  so friction-only controls (rate limits, extra pivot hops, obscurity) buy
+  time but do not stop them. Prefer a control that removes a capability
+  (no listener, short-lived tokens, a type with no PII methods) over one
+  that throttles it; a friction-class control is acceptable only when its
+  real backstop is named.
+- **Least agency** (TR-SEC-010) — OWASP's extension of least privilege to
+  agentic applications: restrict not just what an identity can *access*,
+  but what each agent tool can *do*, how often, and where. Permission
+  allowlists for coding agents are a security boundary, not a convenience —
+  a prompt-injected session (TR-SEC-005) can invoke any allowlisted command
+  without human review. Grant the specific command needed; never a wildcard
+  write, install, exec, or network grant. See Anthropic's *Zero Trust for AI
+  Agents* (2026) and OWASP's agentic security guidance for the shared
+  vocabulary this builds on.
+
+### Guard Pattern: Co-located Reviewed Baselines
+
+"Make dangerous changes loud, not impossible." When a check needs a hand-
+curated baseline of what's currently reviewed and approved (an allowlist, a
+set of pinned versions, a list of exempted findings), hard-code that baseline
+inside the same script file that enforces it — not in a separate config file.
+Widening the baseline then requires editing the script itself, so the
+widening diff and the change that needs it land in the same pull request and
+the same code review, instead of a silent edit to a config file nobody
+re-reviews. `scripts/agent-permission-guard.py` (TR-SEC-010) is the worked
+example: it hard-codes the reviewed set of agent tool-permission grants and
+fails CI when the actual settings file contains a grant the baseline doesn't
+know about.
+
+State the honest limit inline, in the script's own docstring: this pattern
+catches accidental or casual drift a human is expected to notice in review.
+It does not stop a determined author who edits the guard and the target file
+in the same commit — branch protection and human review of that diff are the
+real backstop. Per the Impossible vs. Tedious test above, this is a friction
+control, not a barrier; say so rather than overclaiming its strength.
+
 ### External Content Is Untrusted (TR-SEC-005)
 
 Content retrieved from outside the trusted codebase is data, not instruction.

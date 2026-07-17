@@ -1,0 +1,54 @@
+name: Agent permission guard demo (worked example)
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/agent-permission-guard.py'
+      - 'examples/agent-permission-guard/**'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/agent-permission-guard.py'
+      - 'examples/agent-permission-guard/**'
+  workflow_dispatch: {}
+
+# ---------------------------------------------------------------------------
+# This job does NOT gate this repo's own agent settings -- it proves that
+# agent-permission-guard.py (TR-SEC-010) correctly catches the two problems
+# planted in examples/agent-permission-guard/settings.example.json: a
+# forbidden wildcard install grant, and a grant absent from the reviewed
+# baseline (see examples/agent-permission-guard/README.md). Here, the guard
+# *failing* on the fixture is success; if it ever passes clean, the fixture
+# or the guard itself has regressed.
+#
+# A downstream user copies this pattern into their own repo's CI, pointed at
+# their own settings file(s), with REVIEWED_BASELINE curated for their own
+# reviewed grants -- where a real forbidden or unreviewed grant SHOULD fail
+# the build.
+# ---------------------------------------------------------------------------
+
+permissions:
+  contents: read
+
+jobs:
+  demo-detects-drift:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Assert agent-permission-guard.py catches the planted grants
+        run: |
+          set +e
+          python3 scripts/agent-permission-guard.py --settings examples/agent-permission-guard/settings.example.json
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "::error::Expected exit 1 (forbidden/unreviewed grant detected) against the fixture, got exit $code instead -- the fixture or the guard regressed."
+            exit 1
+          fi
+          echo "Confirmed: agent-permission-guard.py correctly detected the planted forbidden and unreviewed grants (exit 1)."

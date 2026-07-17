@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(pytest:*)",
+      "Bash(pip install:*)",
+      "Bash(ruff check:*)"
+    ]
+  }
+}

@@ -5,14 +5,17 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Set up Python
-        uses: actions/setup-python@v6.3.0
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.12"
 
@@ -24,6 +27,9 @@ jobs:
 
       - name: Cursor rules drift gate
         run: python3 scripts/cursor-rules-adapter.py --out examples/cursor-rules/.cursor/rules --check
+
+      - name: llms.txt drift gate
+        run: python3 scripts/llms-txt-generator.py --check
 
       - name: Install test dependencies
         run: python3 -m pip install "pytest" "detect-secrets>=1.4.0,<2.0.0"

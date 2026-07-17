@@ -37,6 +37,46 @@ requirements:
       Retrieved content must not authorize tool calls or override system-level reasoning.
       When retrieved content may contain PII, TR-SEC-003 routing takes precedence.
 
+  - id: TR-SEC-008
+    title: Local credential files are permission-restricted and secret-scanned
+    status: active
+    section: "Secrets Management"
+    text: >
+      Files holding secrets on a development or production host (.env files, key files,
+      token caches) must be readable by the owning user only (mode 600). While secrets
+      live in local files rather than a vault (TR-SEC-001's target state), a secret-scanning
+      check must run before commit, not only at public-release time. Counters MITRE ATT&CK
+      T1552.001 (Unsecured Credentials: Credentials in Files).
+
+  - id: TR-SEC-009
+    title: CI pipelines run least-privilege and fully pinned
+    status: active
+    section: "CI/CD Supply Chain"
+    text: >
+      Every CI workflow declares an explicit least-privilege permissions block (default
+      contents: read; broader scopes granted per-job with a comment stating why).
+      Third-party CI actions are pinned to a full commit SHA, not a mutable tag, with the
+      human-readable version in a trailing comment. Runtime dependencies past POC tier
+      are pinned to exact versions so the audited dependency set is the set that runs.
+      Counters MITRE ATT&CK T1195 (Supply Chain Compromise) and limits the blast radius
+      of a compromised workflow token.
+
+  - id: TR-SEC-010
+    title: Agent tool permission grants are a security boundary (least agency)
+    status: active
+    section: "Agent Security"
+    text: >
+      Permission allowlists for coding agents (e.g. tool-grant or command-allowlist
+      config) are security boundaries, not conveniences: a prompt-injected agent
+      session (TR-SEC-005) can invoke any allowlisted command without human review.
+      Wildcard grants for arbitrary file writes, package installation, unrestricted
+      exec, or unrestricted network access must not be allowlisted; grant the specific
+      command needed instead. This is OWASP's least-agency principle (least privilege
+      extended to what an agent tool can do, how often, and where) applied to agent
+      tooling. Review all agent permission grants at each governance review
+      (TR-GOV-006). Counters MITRE ATT&CK T1059 (Command and Scripting Interpreter)
+      and T1195.002 executed through trusted developer tooling.
+
   - id: TR-TEST-001
     title: TDD required for core logic
     status: active

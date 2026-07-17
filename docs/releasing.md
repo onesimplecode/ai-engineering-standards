@@ -12,6 +12,20 @@ Cut a release when:
 
 ## Pre-release checklist
 
+**Before starting this checklist**, run the private-repo leak scan from the
+source monorepo root (not shipped here — this repo's own CI cannot see private
+content, so it cannot catch this class of issue):
+
+```bash
+python3 scripts/private-public-export-check.py public-standards
+```
+
+This catches private app/project names, local paths, and career artifacts that
+may have entered staged content since the last release (e.g. copied from a
+private ADR or roadmap note). A v0.5.0 release shipped two private app names
+in prose before this step was made mandatory here — content-pattern checks
+alone (this repo's `detect-secrets` step) do not cover project-name leaks.
+
 ### 1. Verify staging content
 
 Confirm the working tree reflects the intended release state:
@@ -33,6 +47,7 @@ detect-secrets scan \
   --exclude-files '^examples/' \
   | python3 -c "import json,sys; r=json.load(sys.stdin).get('results',{}); print('Potential secrets found -- run detect-secrets scan locally to audit' if r else 'OK -- no secrets detected.'); sys.exit(1 if r else 0)"
 python3 scripts/cursor-rules-adapter.py --out examples/cursor-rules/.cursor/rules --check
+python3 scripts/llms-txt-generator.py --check
 python3 -m pytest tests -q
 ```
 

@@ -27,11 +27,17 @@ registry updates for free, and reviewers can trace which constraint applied.
 
 **2. Generate editor/agent context from the registry.** The registry is
 machine-readable precisely so tool-specific context can be derived rather than
-hand-maintained. `scripts/cursor-rules-adapter.py` is the working example: it
-exports the coding-relevant registry subset as Cursor `.mdc` rules
-(pregenerated copy in `examples/cursor-rules/`), with CI failing on drift.
-The same pattern applies to any tool that consumes context files — skills
-handle the task layer, generated rules pin the constraint layer underneath.
+hand-maintained. `scripts/cursor-rules-adapter.py` is the working example for a
+single tool: it exports the coding-relevant registry subset as Cursor `.mdc`
+rules (pregenerated copy in `examples/cursor-rules/`), with CI failing on drift.
+`scripts/llms-txt-generator.py` generalizes the same pattern to any agent
+framework rather than one tool: it exports the registry, `agents/*.md`,
+`templates/*.md`, and `scripts/*.py` as a single `llms.txt` at repo root,
+following the emerging llms.txt convention (https://llmstxt.org) some
+agent/LLM tools already look for by default — also drift-gated in CI.
+The same underlying pattern applies to any tool that consumes context files —
+skills handle the task layer, generated rules/manifests pin the constraint
+layer underneath.
 
 **3. Gate skill output with the governance artifacts.** Whatever skill
 produced a change, the same checks apply: the completion self-critique
