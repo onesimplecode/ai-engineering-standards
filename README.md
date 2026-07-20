@@ -42,6 +42,34 @@ python3 scripts/llms-txt-generator.py
 python3 scripts/agent-permission-guard.py --settings /path/to/your/settings.json
 ```
 
+## Adopting this into your project
+
+A step-by-step path for pulling these standards into your own repo, not just this one:
+
+1. **Read the model** — [`docs/ai-engineering-operating-model.md`](docs/ai-engineering-operating-model.md)
+   explains the four layers (requirements, roles, artifacts, checks) and the
+   failure modes they guard against.
+2. **Pull in agent conventions** — copy or reference [`AGENTS.md`](AGENTS.md) and
+   the role specs in [`agents/`](agents/) into your own repo so any AI coding
+   tool reads the same rules.
+3. **Run the checks against your repo** — point the Quick start scripts above at
+   your own monorepo (`--root /path/to/your/repo`) instead of this one.
+4. **Adopt templates as needed** — the ADR, impact assessment, maturity
+   checklist, LLM eval, and completion checklist templates in
+   [`templates/`](templates/) are meant to be copied, not just read.
+5. **Study the worked traces** — [`examples/worked-example/`](examples/worked-example/)
+   and [`examples/agent-permission-guard/`](examples/agent-permission-guard/) show
+   a requirement moving end-to-end: TR-ID → ADR → maturity row → script → CI gate.
+6. **Reconcile with tools you already use** — [`docs/agent-skills-integration.md`](docs/agent-skills-integration.md)
+   covers how this layers under AGENTS.md, agent-skills, and Cursor rules rather
+   than replacing them.
+
+None of this requires forking the repo — steps 2–4 are copy-in, and every
+script in step 3 takes a root-path argument (`--root`, `--path`, `--out`,
+`--settings`, or a positional path, depending on the script — see each
+command's `--help`) precisely so it can target your own repo instead of this
+one.
+
 ## Enforced workflow
 
 See [`examples/worked-example/`](examples/worked-example/) for a synthetic trace:

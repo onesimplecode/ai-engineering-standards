@@ -71,6 +71,25 @@ def test_forbidden_wildcard_grant_fails_even_if_added_to_baseline(tmp_path: Path
     assert "'Bash(curl:*)'" in result.stdout
 
 
+def test_forbidden_match_is_case_and_whitespace_insensitive(tmp_path: Path) -> None:
+    settings = tmp_path / BASELINE_KEY
+    write_settings(settings, [
+        "Bash(git status:*)", "Bash(pytest:*)",
+        "Bash(PIP INSTALL:*)", "Bash(pip  install:*)",
+    ])
+    result = subprocess.run(
+        [sys.executable, str(GUARD), "--settings", BASELINE_KEY],
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+    )
+    assert result.returncode == 1
+    forbidden_lines = [l for l in result.stdout.splitlines() if l.startswith("FORBIDDEN")]
+    assert len(forbidden_lines) == 2
+    assert "'Bash(PIP INSTALL:*)'" in result.stdout
+    assert "'Bash(pip  install:*)'" in result.stdout
+
+
 def test_unreviewed_grant_not_matching_baseline_key_fails(tmp_path: Path) -> None:
     other_path = "some/other/settings.json"
     settings = tmp_path / other_path

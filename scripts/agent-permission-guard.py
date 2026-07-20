@@ -56,11 +56,20 @@ _DANGEROUS_VERBS = (
     "pip install", "npm install", "bash -c", "python -c", "python3 -c",
     "git push", "curl", "cat >", "rm -rf", "sudo",
 )
+
+
+def _verb_pattern(verb: str) -> str:
+    # Tolerate case and irregular whitespace (tabs, doubled spaces) between
+    # tokens -- a grant string shouldn't dodge FORBIDDEN by formatting alone.
+    return r"\s+".join(re.escape(token) for token in verb.split())
+
+
 FORBIDDEN_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("wildcard_dangerous_verb", re.compile(
-        r"(?:" + "|".join(re.escape(v) for v in _DANGEROUS_VERBS) + r").*\*"
+        r"(?:" + "|".join(_verb_pattern(v) for v in _DANGEROUS_VERBS) + r").*\*",
+        re.IGNORECASE,
     )),
-    ("unrestricted_home_read", re.compile(r"Read\(//?\*\*\)")),
+    ("unrestricted_home_read", re.compile(r"Read\(//?\*\*\)", re.IGNORECASE)),
 ]
 
 

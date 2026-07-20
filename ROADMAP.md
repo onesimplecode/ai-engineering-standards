@@ -84,10 +84,18 @@ See `CHANGELOG.md` for shipped versions.
       (v0.4 item 1) to any agent framework that reads the emerging llms.txt
       convention (https://llmstxt.org), not just Cursor
 
-## v0.6 — Agentic security & operations patterns
+## v0.6 — Adoption guide
+
+- [x] `README.md` "Adopting this into your project" section: a six-step path
+      (operating-model doc, `AGENTS.md`/`agents/`, running the Quick-start
+      scripts against the reader's own repo, `templates/`, the two worked
+      examples, `docs/agent-skills-integration.md`) consolidating onboarding
+      guidance that was previously scattered across the README and `docs/`
+
+## v0.7 — Agentic security & operations patterns (current)
 
 From the 2026-07-13 Zero-Trust-for-AI-Agents review (private ADRs: private-repo
-ADR-030/031/032, private-repo ADR-018, cloud deployment proposal rev 7). Two
+ADR-030/031/032, private-repo ADR-018, and a private-repo deployment proposal). Two
 maturity classes — this repo exports packaged practice, not aspirations.
 
 **Export-ready (shipped + tested in the private monorepo, 2026-07-13):**
@@ -116,15 +124,15 @@ evidence TR-SEC-010 had — commits, tests, an operating track record):**
 
 - [ ] **Disposition contract** — triage agents emit a structured disposition
       (query / think / report) as a loop-contract output field, extending
-      TR-AGT-003 (deployment proposal rev 7)
+      TR-AGT-003 (private-repo deployment proposal)
 - [ ] **Agreement-rate-gated authority promotion** — the measurable form of
       the advisory-first trust ramp: agent verdicts run advisory while
       human-agreement rate is measured; promotion to blocking/trusted cites
-      the rate, rule by rule, never the whole queue at once (rev 7)
+      the rate, rule by rule, never the whole queue at once (private-repo deployment proposal)
 - [ ] **Agent-ops metric floor** — dwell time (anomaly → human awareness),
       coverage (fraction of agent outputs a human reviewed), and
       explainability-by-trigger-ID (every agent output cites the ID of its
-      triggering event, a mandatory loop-contract field) (rev 7)
+      triggering event, a mandatory loop-contract field) (private-repo deployment proposal)
 - [ ] **Compartmentalization worked example** — the most-exposed agent gets
       the fewest permissions (write-only into a quarantine zone), the
       most-privileged agent gets no public egress, and promotion out of
@@ -143,7 +151,7 @@ evidence TR-SEC-010 had — commits, tests, an operating track record):**
 - [ ] **Layering rule** for agent/platform rollouts (operating-model doc):
       foundational ops/observability ships first; every subsequent phase is
       sized to be immediately usable — no functionality that idles behind
-      unmet dependencies (rev 7)
+      unmet dependencies (private-repo deployment proposal)
 
 ## Non-goals
 
